@@ -1,3 +1,5 @@
+package Compiler;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -92,7 +94,7 @@ public class SymbolTable {
 	
 	public String retrieveForVM(String name) {
 		SymbolTableEntry entry = retrieve(name);
-		return (entry.scope + " " + entry.index); 
+		return (entry.scope + " " + entry.index);
 	}
 	
 	@Override

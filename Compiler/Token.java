@@ -1,3 +1,4 @@
+package Compiler;
 
 public class Token {
 	public String type;

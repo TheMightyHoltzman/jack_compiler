@@ -1,3 +1,4 @@
+package Compiler;
 
 public class SymbolTableEntry {
 	public String name;

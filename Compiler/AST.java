@@ -1,3 +1,5 @@
+package Compiler;
+
 public class AST {	
 	ASTNode root;
 	ASTNode current;
