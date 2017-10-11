@@ -1,0 +1,128 @@
+class Screen {
+
+	static boolean color;
+
+	function void init() {
+		let color = true;
+		return;
+	}
+
+	function void setColor(boolean isOn) {
+		let color = isOn;
+		return;
+	}
+
+	function void drawPixel(int x, int y) {
+		var int address, value, index;
+		let address = (32*x) + (y/16);
+		let value = Memory.peek(16384 + address);
+		let index = 15 & x;
+		if (color) {
+			let value = Math.getTwoToThe(index) | value;
+		}
+		else {
+			let value = ~(Math.getTwoToThe(index)) & value;
+		}
+		do Memory.poke(address, value);
+		return;
+	}
+
+	function void drawLine(int x, int y, int x2, int y2) {
+		var int dx, dy, a, b, diff;
+
+		// we always want to draw from left to right
+		if (x2 < x) {
+			let x2 = x2 + x;
+			let x  = x2 - x;
+			let x2 = x2 - x;
+
+			let y2 = y2 + y;
+			let y  = y2 - y;
+			let y2 = y2 - y;
+		}
+
+		let dx = x2 - x;
+		let dy = y2 - y;
+		let a = 0;
+		let b = 0;
+		let diff = 0;
+
+		// horizontal lign
+		if (dy = 0) {
+			while (~(a = dx)) {
+				do Screen.drawPixel(x+a, y);
+				let a = a + 1;
+			}
+		}
+		else {
+			// vertical lign
+			if (dx = 0) {
+				while (~(b = dy)) {
+					do Screen.drawPixel(x, y + b);
+					let b = b + 1;
+				}
+			}
+			else {
+				// south-east / north-west
+				if (dy < 0) {
+					while ( ((a - 1) < dx) & ((b + 1) > dy) ) {
+						do Screen.drawPixel(x + a, y + b);
+						if (diff > 0) {
+							let a = a + 1;
+							let diff = diff - dy;
+						}
+						else {
+							let b = b - 1;
+							let diff = diff + dx;
+						}
+					}
+				}
+				else {
+					while ( ((a - 1) < dx) & ((b - 1) < dy) ) {
+						do Screen.drawPixel(x + a, y + b);
+						if (diff < 0) {
+							let a = a + 1;
+							let diff = diff - dy;
+						}
+						else {
+							let b = b + 1;
+							let diff = diff + dx;
+						}
+					}
+				}
+			}
+		}
+		return;
+	}
+
+	function void drawCircle(int x, int y, int r) {
+		var int dy;
+		let dy = -r;
+		while ((dy - 1) < r) {
+			do Screen.drawLine(x - Math.sqrt((r*r) - (dy*dy)), (y + dy), x + Math.sqrt((r*r) - (dy*dy)), (y + dy));
+			let dy = dy + 1;
+		}
+		return;
+	}
+
+	function void drawRectangle(int x, int y1, int x2, int y2) {
+		var int height, width;
+		let height = y2 - y1;
+		while (height > -1) {
+			do Screen.drawLine(x, y1 + height, x2, y2+height);
+			let height = height - 1;
+		}
+		return;
+	}
+
+	function void clearScreen() {
+		var int index, size;
+		let index = 0;
+		let size = 100; // TODO
+		while ((index - 1) < size) {
+			do Memory.poke(16384 + index, 0);
+			let index = index + 1;
+		}
+		return;
+	}
+}

@@ -1,4 +1,4 @@
-package Compiler;
+package compiler;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -47,6 +47,7 @@ public class JackTokenizer {
 	public int currentInt;
 	public int previousInt;
 	public int prePreviousInt;
+	public int currentLine;
 	
 	public int mode;
 	
@@ -56,14 +57,20 @@ public class JackTokenizer {
 	}
 
 	public List<Token> work(FileReader reader) throws IOException {
-		current = "";
-		tokens = new LinkedList<>();
-		currentInt = reader.read();;
+		current 	= "";
+		tokens 		= new LinkedList<>();
+		currentInt  = reader.read();
+		currentLine = 1;
+		
 		while (currentInt != -1) {
 			
 			char currentChar     = (char)currentInt;
 			char previousChar    = (char)previousInt; 
 			char prePreviousChar = (char)prePreviousInt;
+		
+			if (currentChar == '\n') {
+				++currentLine;
+			}
 			
 			if (mode == MODE_PARSE_NORMAL) {
 				if (previousChar == '/' && currentChar == '/') {
@@ -97,7 +104,7 @@ public class JackTokenizer {
 					current += currentChar;
 				}
 				else {
-					tokens.add(Token.make("string", current));
+					tokens.add(Token.make("string", current, currentLine));
 					current = "";
 					mode = MODE_PARSE_NORMAL;
 				}
@@ -114,11 +121,11 @@ public class JackTokenizer {
 	public void process(char symbol) {
 		if (symbol == ' ' || symbol == '\r' || symbol == '\n' || symbol == '\t' || isSymbol(symbol + "")) {
 			if (current.length() != 0) {
-				tokens.add(Token.make(getType(current), current));
+				tokens.add(Token.make(getType(current), current, currentLine));
 				current = "";
 			}
 			if (isSymbol(symbol + "")) {
-				tokens.add(Token.make("symbol", symbol + ""));
+				tokens.add(Token.make("symbol", symbol + "", currentLine));
 			}
 		}
 		else {

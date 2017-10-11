@@ -1,4 +1,4 @@
-package Compiler;
+package compiler;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -171,6 +171,9 @@ public class VMWriter {
 					writePop(POINTER, 1);
 					writePush(THAT, 0);
 					break;
+				case JackParser.CONSTANT:
+					writePush(CONSTANT, constantValue(node.children.get(0).value));
+					break;
 				default:
 					throw new IOException("Unsupported term: " + node.children.get(0).type + "\n" + node.toString());
 			}
@@ -204,11 +207,15 @@ public class VMWriter {
 			
 		}
 		else if (node.type.equals("CONSTRUCTOR")) {
-			// TODO test this
+			int nrFields = symbolTable.varCount(SymbolTable.KIND_FIELD);
 			symbolTable.define("this", this.className, SymbolTable.KIND_ARG);
 			handleParameterList(node.children.get(2));
+			
+			// call memory allocate with the given number of fields
+			writePush(CONSTANT, nrFields);
 			write("call Memory.alloc 1");
 			writePop(POINTER, 0);
+			
 			writeSubroutineBody(node.children.get(3));
 		}
 	}
@@ -276,7 +283,6 @@ public class VMWriter {
 			writePop(THAT, 0);
 		} 
 		else {
-			// we need to pop it into this one
 			String identifier = node.children.get(0).children.get(0).value;
 			writeExpression(node.children.get(1).children.get(0));
 			writePop(identifier);
@@ -451,6 +457,8 @@ public class VMWriter {
 			return "call Math.multiply 2";
 		case "/":
 			return "call Math.divide 2";
+		case "%":
+			return "call Math.mod 2";
 		default:
 			throw new IOException("Unknown Operator:" + op);
 		}

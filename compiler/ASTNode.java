@@ -1,4 +1,4 @@
-package Compiler;
+package compiler;
 
 import java.util.Iterator;
 import java.util.LinkedList;

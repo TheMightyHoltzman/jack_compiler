@@ -1,5 +1,6 @@
-package Compiler;
+package compiler;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class JackParser {
 		super();
 	}
 
-	public AST work(List<Token> aTokens) {
+	public AST work(List<Token> aTokens) throws IOException {
 		syntaxTree = new AST();
 		ASTNode root    = new ASTNode("CLASS", null);
 		syntaxTree.root = root;
@@ -66,7 +67,8 @@ public class JackParser {
 		catch (Exception e) {
 			System.out.println("Parsing-Error:");
 			System.out.println(e.getMessage());
-			e.printStackTrace(System.out);
+			//e.printStackTrace(System.out);
+			throw new IOException();
 		}
 		return syntaxTree;
 	}
@@ -453,8 +455,9 @@ public class JackParser {
 			advance();
 		}
 		else {
-			Exception e = new Exception("Unexpected token: " + getCurrent().value);
+			Exception e = new Exception("Unexpected token at line " + getCurrent().line + ": " + getCurrent().value);
 			e.printStackTrace();
+			
 			throw e;
 		}
 	}
@@ -487,6 +490,7 @@ public class JackParser {
 		ops.add("|");
 		ops.add("<");
 		ops.add(">");
+		ops.add("%");
 		ops.add("=");
 		
 		return ops.contains(getCurrent().value);

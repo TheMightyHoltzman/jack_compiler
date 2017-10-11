@@ -1,4 +1,4 @@
-package Compiler;
+package compiler;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -70,7 +70,7 @@ public class JackCompiler {
 	
 	public static void main(String[] args) {
 		JackCompiler compiler = new JackCompiler();
-		String path = "/home/heiko/learn/nand2tetris/projects/11/MyTest";
+		String path = "/home/heiko/dev/JackCompiler/src/lib/Screen.jack";
 		if (args.length != 0) {
 			path = args[0];
 		}

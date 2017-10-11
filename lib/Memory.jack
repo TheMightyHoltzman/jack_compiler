@@ -1,0 +1,46 @@
+class Memory {
+
+	static Array heap;
+	static int free;
+
+	function void init() {
+		let heap = 2048;
+		let free = 2048;
+		let heap[0] = 0; // next
+		let heap[1] = 14335; // length
+	}
+
+	/**
+	 * Returns the value of the given RAM address
+	 */
+	function int peek(int address) {
+		return ram[address];
+	}
+
+	/**
+	 * Set value of the given RAM address
+	 */
+	function void poke(int address, int value) {
+		let ram[address] = value;
+	}
+
+	/**
+	 * Returns the value of the given RAM address
+	 */
+	function Array alloc(int size) {
+
+	}
+
+	/**
+	 * Returns the value of the given RAM address
+	 */
+	function void deAlloc(Array o) {
+		// do nothing
+	}
+
+	/**
+	 * Returns the value of the given RAM address
+	 */
+	function int find(int size) {
+	}
+}
