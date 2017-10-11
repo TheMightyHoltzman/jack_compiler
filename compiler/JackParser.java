@@ -455,9 +455,8 @@ public class JackParser {
 			advance();
 		}
 		else {
-			Exception e = new Exception("Unexpected token at line " + getCurrent().line + ": " + getCurrent().value);
+			Exception e = new Exception("Unexpected token at line " + getCurrent().line + ": \nExpected: " + token + "\nGot: " + getCurrent().value);
 			e.printStackTrace();
-			
 			throw e;
 		}
 	}
